@@ -655,8 +655,18 @@ if RegexMatch(Clipboard, "`{[\d-+]+:[\d-+]+`}")>0
 	}
 else if RegexMatch(Clipboard, "`{.+?\s.+?")>0
 	{
-	repeatwords := RegexReplace(Clipboard, ".*?`{(.{3,})`}.*", "$1")
-	replacelist := StrSplit(repeatwords, A_Space)
+	candidate_sections := StrSplit(Clipboard, "`}")
+	For index, value in candidate_sections
+		{
+		repeatwords := RegexReplace(value, "^.*?`{", "")
+		tmp := RegExReplace(repeatwords, "\b", Replacement = "\b", count)
+		if count > 2
+			{
+			replacelist := StrSplit(repeatwords, A_Space)
+			break
+			}
+		}
+	;replacelist := StrSplit(repeatwords, A_Space)
 
 	repeattext :=RegExReplace(Clipboard, "`{.+?`}", "`{R`}")
 
